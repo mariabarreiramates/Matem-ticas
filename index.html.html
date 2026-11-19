@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Escape room matemático · Operación Divisibilidad</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
+:root{--bg:#101827;--panel:#1b2639;--panel2:#222f45;--text:#eef4ff;--muted:#a8b7ce;--cyan:#63e6e2;--violet:#a78bfa;--green:#5ee0a0;--red:#ff7b88;--gold:#ffd166}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--text);font-family:Nunito,system-ui,sans-serif;background:radial-gradient(ellipse at 15% 5%,#263d5d 0,transparent 35%),radial-gradient(ellipse at 90% 90%,#382e5a 0,transparent 38%),var(--bg);padding:20px}
+.wrap{max-width:900px;margin:auto}
+header{text-align:center;padding:18px 10px 20px}
+.kicker{letter-spacing:.18em;text-transform:uppercase;font-size:.76rem;color:var(--cyan);font-weight:900}
+h1{font-size:clamp(1.8rem,5vw,3.2rem);margin:8px 0 5px;font-weight:900;line-height:1.05}
+header p{color:var(--muted);margin:0}
+.hud{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;background:#ffffff08;border:1px solid #ffffff18;border-radius:18px;padding:15px 18px;margin:14px 0}
+.progressLabel{display:flex;justify-content:space-between;font-size:.9rem;color:var(--muted);margin-bottom:8px}
+.progress{height:9px;background:#ffffff12;border-radius:99px;overflow:hidden}
+.progressFill{height:100%;width:0;background:linear-gradient(90deg,var(--violet),var(--cyan));transition:width .4s}
+.timer{font-family:"Space Mono",monospace;font-size:1.45rem;font-weight:bold;color:var(--gold);background:#0003;padding:10px 14px;border-radius:12px;white-space:nowrap}
+.timer.warning{color:var(--red);animation:pulse .8s infinite alternate}
+@keyframes pulse{to{opacity:.55}}
+.panel{background:linear-gradient(145deg,#202e45,#172235);border:1px solid #ffffff17;border-radius:24px;padding:clamp(20px,5vw,36px);box-shadow:0 18px 55px #0004}
+.badge{display:inline-block;background:#63e6e21c;color:var(--cyan);border:1px solid #63e6e233;padding:6px 12px;border-radius:99px;font-weight:900;font-size:.82rem}
+h2{margin:14px 0 18px;font-size:1.55rem}
+.clues{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.clues li{padding:14px 16px;border-radius:14px;background:#ffffff08;border:1px solid #ffffff0e;font-size:1.12rem}
+.clues li:before{content:"▸";color:var(--cyan);margin-right:10px;font-weight:bold}
+.entry{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}
+input{min-width:0;flex:1;padding:14px 16px;border:2px solid #ffffff20;border-radius:13px;background:#0e1725;color:white;font-size:1.15rem;outline:none}
+input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #63e6e220}
+button{border:0;border-radius:13px;padding:13px 19px;font-weight:900;font-size:1rem;cursor:pointer;color:#111827;background:linear-gradient(110deg,var(--cyan),#95f2cf);transition:transform .15s,filter .15s}
+button:hover{transform:translateY(-2px);filter:brightness(1.05)}
+button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.feedback{min-height:30px;margin:15px 0 0;font-weight:900}
+.feedback.good{color:var(--green)}.feedback.bad{color:var(--red)}
+.nextrow{display:flex;justify-content:flex-end;margin-top:12px}
+.secondary{background:#ffffff13;color:var(--text);border:1px solid #ffffff22}
+.hidden{display:none!important}
+.passwordBox{display:flex;gap:8px;justify-content:center;margin:18px 0}
+.digit{width:54px;height:64px;border:1px solid #ffffff24;background:#0c1524;border-radius:12px;display:grid;place-items:center;font-family:"Space Mono",monospace;font-size:1.5rem;color:var(--gold)}
+.finish{text-align:center}.finish h2{font-size:2rem}.finish p{color:var(--muted);font-size:1.1rem}
+.small{font-size:.85rem;color:var(--muted);margin-top:18px}
+@media(max-width:520px){body{padding:12px}.hud{grid-template-columns:1fr}.timer{justify-self:start}.entry button{width:100%}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="kicker">Escape room · Matemáticas</div>
+<h1>🔐 Operación Divisibilidad</h1>
+<p>15 retos. Una contraseña. ¿Conseguirás escapar antes de que acabe el tiempo?</p>
+</header>
+<div class="hud">
+<div><div class="progressLabel"><span id="progressText">Desafío 1 de 15</span><span id="progressCount">0 / 15 desbloqueados</span></div><div class="progress"><div class="progressFill" id="progressFill"></div></div></div>
+<div class="timer" id="timer">15:00</div>
+</div>
+<div class="passwordBox" id="passwordProgress" aria-label="Fragmentos de contraseña"><div class="digit">?</div><div class="digit">?</div><div class="digit">?</div><div class="digit">?</div></div>
+<section class="panel" id="game"></section>
+<p class="small" style="text-align:center">Consejo: lee todas las pistas, busca un número que las cumpla y comprueba tu respuesta.</p>
+</div>
+<script>
+const puzzles=[
+{clues:["Es menor que 50.","Es múltiplo de 6.","Es divisible por 4."],answers:["12"],code:null},
+{clues:["Es mayor que 30 y menor que 60.","Es múltiplo de 9.","No es divisible por 6."],answers:["45"],code:null},
+{clues:["Es número primo.","Es mayor que 40 y menor que 50."],answers:["41","43","47"],code:"3"},
+{clues:["Es divisor de 40.","Es múltiplo de 5.","Es divisible por 4."],answers:["20"],code:null},
+{clues:["Es múltiplo de 9.","Es divisor de 81.","Es divisible por 3."],answers:["9","27","81"],code:null},
+{clues:["Es divisible por 8.","Es divisor de 96.","Es múltiplo de 6."],answers:["24","48","96"],code:null},
+{clues:["Es múltiplo de 11.","Es divisor de 121.","Es divisible por 11."],answers:["11"],code:"1"},
+{clues:["Es divisor de 90.","Es múltiplo de 3.","Es divisible por 5."],answers:["15","30","45","90"],code:null},
+{clues:["Es múltiplo de 4.","Es divisible por 3.","Es divisor de 84."],answers:["12","24","84"],code:null},
+{clues:["Es divisor de 72.","Es divisible por 9.","Es múltiplo de 2."],answers:["18","36","72"],code:null},
+{clues:["Es múltiplo de 5.","Es divisible por 2.","Es divisor de 100."],answers:["10","20","50","100"],code:"0"},
+{clues:["Es divisor de 63.","Es múltiplo de 3.","Es divisible por 7."],answers:["21","63"],code:null},
+{clues:["Es múltiplo de 12.","Es divisible por 4.","Es divisor de 120."],answers:["12","24","60","120"],code:null},
+{clues:["Es divisor de 48.","Es múltiplo de 3.","Es divisible por 4."],answers:["12","24","48"],code:null},
+{clues:["Es el menor número que al dividirlo entre 4 y entre 6 da resto 2."],answers:["14"],code:"4"}
+];
+let current=0, unlocked=0, timeLeft=900, interval, passwordDigits=["?","?","?","?"];
+const game=document.getElementById('game'), timer=document.getElementById('timer');
+function render(){
+ document.getElementById('progressText').textContent=`Desafío ${current+1} de 15`;
+ document.getElementById('progressCount').textContent=`${unlocked} / 15 desbloqueados`;
+ document.getElementById('progressFill').style.width=`${unlocked/15*100}%`;
+ const p=puzzles[current];
+ game.innerHTML=`<span class="badge">DESAFÍO ${current+1} · ARCHIVO ${String(current+1).padStart(2,'0')}</span>
+ <h2>Encuentra el número secreto</h2><ul class="clues">${p.clues.map(c=>`<li>${c}</li>`).join('')}</ul>
+ <div class="entry"><input id="answer" type="number" inputmode="numeric" placeholder="Escribe tu número…" autocomplete="off" aria-label="Tu respuesta"><button id="check">Comprobar</button></div>
+ <p class="feedback" id="feedback" aria-live="polite"></p><div class="nextrow"><button class="secondary hidden" id="next">${current===14?'Abrir pantalla final':'Siguiente desafío →'}</button></div>`;
+ const inp=document.getElementById('answer'),check=document.getElementById('check');
+ check.onclick=verify;inp.addEventListener('keydown',e=>{if(e.key==='Enter')verify()});inp.focus();
+}
+function verify(){
+ const input=document.getElementById('answer'),feedback=document.getElementById('feedback'),btn=document.getElementById('check'),next=document.getElementById('next');
+ const value=input.value.trim();
+ if(!value){feedback.textContent='Escribe un número para comprobarlo.';feedback.className='feedback bad';return}
+ if(puzzles[current].answers.includes(value)){
+  feedback.textContent='¡Correcto! 🔓 Has desbloqueado este desafío.';feedback.className='feedback good';btn.disabled=true;input.disabled=true;unlocked=Math.max(unlocked,current+1);
+  document.getElementById('progressCount').textContent=`${unlocked} / 15 desbloqueados`;document.getElementById('progressFill').style.width=`${unlocked/15*100}%`;
+  if(puzzles[current].code!==null){const idx=[2,6,10,14].indexOf(current);if(idx>=0)passwordDigits[idx]=puzzles[current].code;document.getElementById("passwordProgress").innerHTML=passwordDigits.map(d=>`<div class="digit">${d}</div>`).join('');}
+  next.classList.remove('hidden');next.onclick=advance;
+ }else{feedback.textContent='No es correcto. ¡Síguelo intentando!';feedback.className='feedback bad';input.select()}
+}
+function advance(){
+ if(current<14){current++;render()}else finish();
+}
+function finish(){
+ clearInterval(interval);
+ document.getElementById('progressText').textContent='¡Todos los desafíos superados!';
+ document.getElementById('progressCount').textContent='15 / 15 desbloqueados';document.getElementById('progressFill').style.width='100%';
+ game.innerHTML=`<div class="finish"><span class="badge">ÚLTIMA PRUEBA</span><h2>🔐 Introduce la contraseña</h2><p>Usa los cuatro dígitos secretos que has ido reuniendo durante la misión.</p><div class="entry"><input id="finalCode" type="text" inputmode="numeric" maxlength="4" placeholder="Código de 4 cifras"><button id="unlockFinal">Desbloquear</button></div><p class="feedback" id="finalFeedback" aria-live="polite"></p></div>`;document.getElementById("unlockFinal").onclick=unlockPassword;document.getElementById("finalCode").addEventListener("keydown",e=>{if(e.key==="Enter")unlockPassword()});
+}
+function unlockPassword(){const val=document.getElementById("finalCode").value.trim(),f=document.getElementById("finalFeedback");if(val==="3104"){game.innerHTML=`<div class="finish"><span class="badge">MISIÓN COMPLETADA</span><h2>🎉 ¡Has escapado!</h2><p>Has superado los 15 desafíos de divisibilidad y desbloqueado la salida.</p><p><strong>¡Enhorabuena, detective matemático!</strong></p><button class="secondary" onclick="location.reload()">Volver a jugar</button></div>`}else{f.textContent="Contraseña incorrecta. ¡Síguelo intentando!";f.className="feedback bad";document.getElementById("finalCode").select()}}
+function formatTime(){let m=Math.floor(timeLeft/60),s=timeLeft%60;timer.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;if(timeLeft<=60)timer.classList.add('warning')}
+interval=setInterval(()=>{if(timeLeft>0){timeLeft--;formatTime()}else{clearInterval(interval);timer.textContent='00:00';timer.classList.add('warning');game.innerHTML=`<div class="finish"><h2>⏰ Se acabó el tiempo</h2><p>¡No pasa nada! Puedes volver a intentarlo.</p><button class="secondary" onclick="location.reload()">Reiniciar misión</button></div>`}},1000);
+render();
+</script>
+</body>
+</html>
