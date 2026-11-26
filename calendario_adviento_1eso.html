@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calendario de adviento navideño 1º ESO</title>
+<style>
+:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:#0e3b2a;color:#2b1d12;font-family:"Trebuchet MS",Verdana,sans-serif;min-height:100vh;overflow-x:hidden}
+.snow{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.snow i{position:absolute;top:-20px;color:#fff;font-style:normal;animation:f linear infinite;opacity:.8}
+@keyframes f{to{transform:translateY(105vh) rotate(360deg)}}
+main{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:12px 14px 40px}
+h1{color:#fff8ea;text-align:center;font-size:24px;margin:6px 0 2px}
+.gar{text-align:center;font-size:22px;letter-spacing:6px;margin:0 0 8px}
+.card{background:#fff8ea;border-radius:14px;padding:16px;margin:0 0 12px;border:3px solid #b3202a}
+input,select,button{font:inherit;font-size:16px;padding:9px 12px;border-radius:8px;border:1.5px solid #165b3a;background:#fff;color:#2b1d12}
+button{background:#b3202a;color:#fff;border-color:#b3202a;cursor:pointer}
+button.s{background:#fff;color:#165b3a}button.g{background:#165b3a;border-color:#165b3a}
+.w{width:100%;margin-bottom:10px;display:block}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+@media(min-width:560px){.grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.b{aspect-ratio:1/1;border-radius:12px;border:2px solid #165b3a;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:13px;color:#165b3a;position:relative}
+.b span{font-size:22px;font-weight:bold;line-height:1.1}
+.b.lock{background:#e8e2d4;border-color:#bdb5a1;color:#8c846f;cursor:not-allowed}
+.b.hoy{background:#f2b632;border-color:#b3202a;color:#7a1219;animation:p 1.4s infinite}
+.b.ok{background:#d6efdc}.b.fail{background:#f6d3d3;border-color:#b3202a;color:#b3202a}.b.exp{background:#f3e3b8;border-color:#b98a10;color:#7a5a00}
+.b em{position:absolute;top:2px;right:5px;font-style:normal;font-size:14px}
+@keyframes p{50%{transform:scale(1.05)}}
+.tm{font-size:26px;font-weight:bold;color:#165b3a}.tm.r{color:#b3202a}
+.pr{font-size:18px;line-height:1.55;margin:10px 0 14px}
+.msg{margin:8px 0;font-size:15px}.err{color:#b3202a}.okc{color:#165b3a;font-weight:bold}
+.sol{background:#eaf5ec;border-left:5px solid #165b3a;padding:10px 12px;margin-top:12px;line-height:1.6}
+.pill{background:#165b3a;color:#fff;border-radius:99px;padding:3px 12px;font-size:14px}
+.row{display:flex;gap:8px}.row input{flex:1}
+.sc{overflow-x:auto}table{border-collapse:collapse;font-size:13px;width:100%}
+td,th{border:1px solid #d9d0bb;padding:4px 5px;text-align:center;white-space:nowrap}th{background:#165b3a;color:#fff}
+td.n{text-align:left}.c-ok{background:#d6efdc}.c-fail{background:#f6d3d3}.c-exp{background:#f3e3b8}
+.met{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin:10px 0}
+.met div{background:#fff;border:1.5px solid #165b3a;border-radius:10px;padding:8px;text-align:center}.met b{display:block;font-size:22px;color:#b3202a}
+textarea{font:inherit;font-size:13px;width:100%;border-radius:8px;border:1.5px solid #165b3a;padding:8px}
+</style></head><body>
+<div class="snow" id="snow" aria-hidden="true"></div>
+<main>
+<h1>🎄 Calendario de adviento navideño 1º ESO 🎄</h1>
+<p class="gar" aria-hidden="true">🔴🟡🟢🔴🟡🟢🔴🟡🟢🔴🟡</p>
+<div id="app"></div>
+</main>
+<script>
+const SY=["+","×","²","÷","−","%","³","±","≠","√","+","×","²","÷","−","%","³","±","≠","√","∞","%","Σ","🎁"];
+const R=[
+["El trineo cargado",3,"Papá Noel carga en su trineo 3 sacos con 25 regalos cada uno y 2 sacos con 18 regalos cada uno. En la primera casa entrega 31 regalos. ¿Cuántos regalos le quedan?","66463d24652ec7a79b9d2323e08a43bc3f6c3b5a49b0cb56d3fb3026aa3892ef","3·25 = 75 y 2·18 = 36.<br>75 + 36 = 111 regalos en total.<br>111 − 31 = 80.<br><b>Respuesta: 80</b>"],
+["Jerarquía navideña",3,"Calcula: 5 + 3·(12 − 4) − 20 : 5","e97bf366d093f770804f2e90cae4064208515e14a4e0ebca070c93616d0dfbd9","Primero el paréntesis: 12 − 4 = 8.<br>Luego multiplicaciones y divisiones: 3·8 = 24 y 20 : 5 = 4.<br>Por último: 5 + 24 − 4 = 25.<br><b>Respuesta: 25</b>"],
+["El árbol de luces",3,"Un árbol tiene 3 ramas. Cada rama tiene 3 ramitas, cada ramita 3 bolas y cada bola 3 luces. ¿Cuántas luces hay en total?","4e3bd76c490ffa1cd7900f1bfbd2a69d67a3838a59e4fc3aaf4a2cedbc42e41e","Es 3·3·3·3 = 3⁴.<br>3² = 9, 3³ = 27 y 3⁴ = 81.<br><b>Respuesta: 81</b>"],
+["Múltiplos de la estrella",4,"¿Cuántos múltiplos de 7 hay entre 1 y 100, ambos incluidos?","82fe26122c86ae9d570dd2872c4d5cf095da3144cc09a53bdcbdc19c9db3a402","100 : 7 = 14 con resto 2.<br>Los múltiplos son 7·1, 7·2, …, 7·14 (7·15 = 105 ya se pasa).<br>Hay 14.<br><b>Respuesta: 14</b>"],
+["Frío en Laponia",4,"A las 8:00 el termómetro marca −8 °C. A las 10:00 sube 5 grados, a las 12:00 baja 9 grados y a las 14:00 sube 7 grados. ¿Qué temperatura marca a las 14:00? (Escribe solo el número)","5bc8b7da4657ca5fa72b19d71553e644652ab392bf1b826f465953f127a64402","−8 + 5 = −3<br>−3 − 9 = −12<br>−12 + 7 = −5 °C.<br><b>Respuesta: −5</b>"],
+["Potencias de los duendes",4,"Calcula: 2⁵·2³ : 2⁶ + 3²","3ef738abedabe06f75cf489e24fe658a30e5aafabef00499099df8626d8180b1","Producto de potencias de igual base: 2⁵·2³ = 2⁸.<br>Cociente: 2⁸ : 2⁶ = 2² = 4.<br>3² = 9, así que 4 + 9 = 13.<br><b>Respuesta: 13</b>"],
+["Bolsas de caramelos",5,"Papá Noel tiene 48 caramelos y 36 turrones. Quiere hacer el mayor número posible de bolsas iguales, sin que sobre nada. ¿Cuántas bolsas hará?","171f7f4ea1078460bbecb71797d50b583adcb1c19d8fd574b6d1c227d30d31e0","Hay que calcular el MCD(48, 36).<br>48 = 2⁴·3 y 36 = 2²·3².<br>MCD = 2²·3 = 12 bolsas (con 4 caramelos y 3 turrones cada una).<br><b>Respuesta: 12</b>"],
+["Enteros con gorro",4,"Calcula: (−3)·(+4) − (−10) : (+2) + (−2)·(−6)","90b15f157808cfb7b1b1242d897a8f1c4ca13fec28e76e29d6f9a64f9d68d3ef","(−3)·4 = −12; (−10) : 2 = −5 y restar −5 es sumar 5; (−2)·(−6) = +12.<br>−12 + 5 + 12 = 5.<br><b>Respuesta: 5</b>"],
+["Cifra misteriosa",5,"Sustituye ★ por una cifra para que 34★ sea divisible entre 2 y entre 3 a la vez. Suma todas las cifras posibles.","b8235902915f0b20b1a1adff0b9146a337fe3d319cb20151447dd7c3d29eda99","Entre 2: ★ ∈ {0, 2, 4, 6, 8}.<br>Entre 3: 3 + 4 + ★ = 7 + ★ debe ser múltiplo de 3 → ★ = 2, 5 u 8.<br>Cumplen las dos: 2 y 8 (342 y 348). Suma: 2 + 8 = 10.<br><b>Respuesta: 10</b>"],
+["Luces parpadeantes",6,"Tres guirnaldas parpadean cada 4, 6 y 10 segundos y ahora parpadean a la vez. ¿Cuántas veces volverán a coincidir en los próximos 5 minutos (incluido el instante final)?","70e14c1194374425075e178860b073b227df15a75c96dcb784232b626c84f0e3","mcm(4, 6, 10): 4 = 2², 6 = 2·3, 10 = 2·5 → 2²·3·5 = 60 s.<br>5 min = 300 s y 300 : 60 = 5 veces (a los 60, 120, 180, 240 y 300 s).<br><b>Respuesta: 5</b>"],
+["Primos del belén",5,"¿Cuántos números primos hay entre 20 y 50?","91a1bb2600ee2de59ab2f9128c529e27490ee0d9bfcc40c967f4a7cd2a0802f6","Probamos los impares: 23 ✓, 25 ✗, 27 ✗, 29 ✓, 31 ✓, 33 ✗, 35 ✗, 37 ✓, 39 ✗, 41 ✓, 43 ✓, 45 ✗, 47 ✓, 49 ✗.<br>Primos: 23, 29, 31, 37, 41, 43 y 47 → 7.<br><b>Respuesta: 7</b>"],
+["Submarino navideño",4,"Un submarino está a −120 m. Sube 45 m, luego baja 80 m y por último sube 30 m. ¿A qué altura queda respecto al nivel del mar? (Escribe solo el número)","219619df47fdacc10c66e12886fd8ea05532216cce0ffd0134672dc51f588fb9","−120 + 45 = −75<br>−75 − 80 = −155<br>−155 + 30 = −125 m.<br><b>Respuesta: −125</b>"],
+["El secreto de los duendes",6,"Un duende cuenta un secreto a 2 duendes. En la ronda siguiente, cada uno de ellos se lo cuenta a 2 duendes nuevos, y así durante 6 rondas. ¿Cuántos duendes conocen el secreto al final, contando al primero?","81b931cd22ecd10c4631ebc9c1a312ea4e4997b6303dc53dfb26d249b56f5a32","Ronda 0: 1 duende. Después se suman 2, 4, 8, 16, 32 y 64 (2¹ … 2⁶).<br>1 + 2 + 4 + 8 + 16 + 32 + 64 = 127 (es 2⁷ − 1).<br><b>Respuesta: 127</b>"],
+["Divisores de 72",5,"¿Cuántos divisores tiene el número 72?","a9d91f3c68bd64f41ab0735fea2291fec38de95538ab895c0f44fd34656765e9","72 = 2³·3².<br>Nº de divisores: (3+1)·(2+1) = 12.<br>Son: 1, 2, 3, 4, 6, 8, 9, 12, 18, 24, 36 y 72.<br><b>Respuesta: 12</b>"],
+["Suma de renos",5,"Cada uno de los 40 renos lleva un dorsal numerado del 1 al 40. ¿Cuánto suman todos los dorsales?","9eaaf708f39eec2e6dc32e00f8409de23fcb05cc9cb529e9d67ec1cd0ec7d147","Emparejamos: 1 + 40 = 41, 2 + 39 = 41, … Hay 20 parejas.<br>20·41 = 820.<br><b>Respuesta: 820</b>"],
+["Potencias en cadena",5,"Calcula: (5² − 4²)² − 2³·3","e7ebce156cd59de08ec02f6f8219cf46ed0831391514ecde2d25fd5c14a44235","5² − 4² = 25 − 16 = 9 y 9² = 81.<br>2³·3 = 8·3 = 24.<br>81 − 24 = 57.<br><b>Respuesta: 57</b>"],
+["Enteros en fila",5,"Calcula la suma de todos los números enteros desde −10 hasta 12, ambos incluidos.","f83a2c6ec2f6aeb4870cb0ca0e0748e32fb9df0f840b40e2ebb560191427e73f","Del −10 al 10 los opuestos se anulan (suman 0).<br>Quedan 11 + 12 = 23.<br><b>Respuesta: 23</b>"],
+["Regalos de 3 o de 5",8,"Entre los números del 1 al 100, ¿cuántos son múltiplos de 3 o de 5 (o de ambos)?","a649bc856608080149118edc1959c81dc14151dbffa9486f62ed821b48e28206","Múltiplos de 3: 33. Múltiplos de 5: 20.<br>Los múltiplos de 15 (de ambos) son 6 y se han contado dos veces.<br>33 + 20 − 6 = 47.<br><b>Respuesta: 47</b>"],
+["La división del abeto",4,"Al dividir un número D entre 17 se obtiene de cociente 12 y de resto 9. ¿Cuánto vale D?","5f31e1ee3b24bf0add7a3a33b42fd2a8297b61ac273b6913c985541cc07e6dd9","Dividendo = divisor·cociente + resto.<br>D = 17·12 + 9 = 204 + 9 = 213.<br><b>Respuesta: 213</b>"],
+["Última cifra navideña",8,"¿Cuál es la última cifra de 3²⁰²⁶?","5da7ed1a031f3350511c9163c074b04147a41fd818f5377a1c2a78795e5394c0","Las últimas cifras de 3¹, 3², 3³, 3⁴, 3⁵… son 3, 9, 7, 1, 3… y se repiten cada 4.<br>2026 : 4 = 506 con resto 2.<br>Corresponde al 2.º de la lista: 9.<br><b>Respuesta: 9</b>"],
+["El número del calcetín",5,"Pienso un número entero, lo multiplico por −3, le sumo 8 y obtengo −10. ¿Qué número pensé?","2a772ff8687d28528d4b8671100d449542e95c11c664e50d6ae83f40bf0667ee","Deshacemos los pasos al revés: −10 − 8 = −18 y −18 : (−3) = 6.<br>Comprobación: 6·(−3) = −18 y −18 + 8 = −10 ✓.<br><b>Respuesta: 6</b>"],
+["Resto uno",6,"¿Cuál es el menor número natural mayor que 1 que, dividido entre 4, entre 6 y entre 9, da siempre resto 1?","3d96dfb8802b11de93df65f1826712aa7a688419a6eae482dc2e96777326914b","Si restamos 1, el número debe ser múltiplo de 4, 6 y 9: mcm = 36.<br>Entonces el número es 36 + 1 = 37.<br>Comprobación: 37 = 4·9 + 1 = 6·6 + 1 = 9·4 + 1.<br><b>Respuesta: 37</b>"],
+["Signos y exponentes",5,"Calcula: (−2)⁵ + (−3)³ − (−1)²⁰²⁶","c72aa8b8c0ce552c6834f4ba8f6efd25af3547de3ef3ad1cd309f7ec8ff8cdd4","(−2)⁵ = −32 (exponente impar → negativo).<br>(−3)³ = −27.<br>(−1)²⁰²⁶ = 1 (exponente par) y se resta: −1.<br>−32 − 27 − 1 = −60.<br><b>Respuesta: −60</b>"],
+["El gran regalo final",8,"Papá Noel tiene 360 regalos y quiere repartirlos en bolsas iguales sin que sobre ninguno. ¿De cuántas formas distintas puede elegir el número de bolsas? (Cuenta todos los divisores de 360)","5fc60a8714da28e96dba775e5f9f445f9435f9b2f36ee482f00ad506b98c18b1","360 = 2³·3²·5.<br>Nº de divisores: (3+1)·(2+1)·(1+1) = 4·3·2 = 24.<br><b>Respuesta: 24</b>"]
+];
+const $=s=>document.querySelector(s),A=$("#app");
+const SALT="adv26-navidad",PH="96d601057ec80da929154e9edd58a23cc0256b3766a9f9c82b87636f44bd35c3",CH=["86fafb8b1cbccb2b240368511c8c2adc365de290192ca6963f1802d7a3381c87", "105a0f39ffba8c14cc16a862b9b75a67e2176b13db88e4f14cbaee5a51bac017", "e7469deb67ec67344d54d9027b5f314469f3a3c8bc15e8e05123780c0a909251", "2abd4a1f71ae44463664f491d9154ab8ffd416127c45b6080c644370918e47f8", "fd8760598a9ac1d45b30ba85cb6359463b189611c450520221962f77048c1d2b", "b4928250688d3f5128aa818c5071bfc9edc05a9fce7ed7671e136492bdcb12f5", "9e4aff21cd09f72b4a85c6c0e16222edfdb98bd4d3a4b19d502014105b90f7dd", "cf6042bed6889f624e93b851271e5d9be4e9c3821b1fb6fbd47c8a612dde996b", "d6fd405ca094315104da204eaffd25bc24e61b72d9c5747f95ff2d35e27d9623", "4020ac2da5ce946a230bdb62a97649a8a3fcc0f1762a8af3a158619e7ff75f5f", "9920a5ef56a083c1aaa4c75a43c5cdda36c2b9649205d5c66a610e139ca8613e", "9035a7a9ab7f97875ce813d780781012e2cbfe146295cb0a37a0f23b31594b8f", "ebb820501f4abff8a8462b70b584af6685e86db79489bba6cc8cdd325d1595a3", "6b2a49dd8e2528d1a6242ae06b6a895d73f63d8e35c96b58110469ace50118ac", "0747a04927be7583dca34ce6c380a0d4c5c6b1a0b22d17783238fb34eaddf481", "9251e5b7654598c175fae79c67ee6dd5eddf1a3fe05eb2cf0f4c3a4fba8499d1", "de5a4e99c87f0c033ec57743143077257e56248e5ae6ab3192ebd9b1ebbcfbeb", "126a75d6094eed137ecd7909388fa1dabe8c867b5fce280b64982f16690ceb94", "5a02f677f1f954d6e43895dee4fcc73e80c6dc3191348396d15ea3ce68845374", "a9f4261e26a762f70294f9d46004d870d951413268656bda730c90fd4af4c411", "52ae6dc050b69c6bb43bce7fc5a15a0f66b9ba8d909983856bf0332a4b68961f", "37ba7ec69c85f86968e5af68fd2db8b4ada8a40102af5859638f62fed9469738", "334cc0f8baefcc6d1742713aab6cf682d38b1124262304fad5c1ed473948492c", "0b9b0ebc49dfb665acebb276c2472a3ddff3ac2b58196ee4471d9ff47a8e6300"];
+const SOLO_CLASE=[5,6,12,13,19,20];
+const AUTO_FECHA=true;
+const H=async s=>[...new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s)))].map(b=>b.toString(16).padStart(2,"0")).join("");
+const esc=s=>String(s).replace(/[&<>"'`]/g,c=>"&#"+c.charCodeAt(0)+";");
+const ld=()=>{try{return JSON.parse(localStorage.getItem("adv26")||"{}")}catch(e){return{}}};
+const sv=d=>{try{localStorage.setItem("adv26",JSON.stringify(d))}catch(e){}};
+const f=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+let U=null,T=false,tm=null,F="all",ROWS=[],PW="",CODES=[];
+function hoy(){const n=new Date(),y=n.getFullYear(),m=n.getMonth();if(y<2026||(y==2026&&m<11))return 0;if(y==2026&&m==11)return n.getDate();return 99}
+const ab=i=>T||!!(U.k&&U.k[i+1])||(!SOLO_CLASE.includes(i+1)&&AUTO_FECHA&&hoy()>=i+1);
+function save(){const d=ld();d.users=d.users||{};d.users[U.id]=U;sv(d)}
+function fin(i,st,t){const e=U.d[i];e.st=st;e.t=t;save()}
+function chk(i){const e=U.d[i];if(!e||e.st!="open")return;const lim=R[i][1]*60,el=Math.round((Date.now()-e.s)/1000);if(el>=lim)fin(i,"exp",lim)}
+function sweep(){for(const i in U.d)chk(+i)}
+function snow(){const s=$("#snow");for(let k=0;k<28;k++){const e=document.createElement("i");e.textContent=k%3?"❄":"✦";e.style.left=Math.random()*100+"%";e.style.fontSize=8+Math.random()*14+"px";e.style.animationDuration=7+Math.random()*10+"s";e.style.animationDelay=-Math.random()*15+"s";s.appendChild(e)}}
+function login(m){clearInterval(tm);T=false;U=null;PW="";A.innerHTML=`<div class="card" style="max-width:420px;margin:20px auto"><p style="font-size:18px;margin:0 0 10px"><b>¡Bienvenido/a!</b> Cada día hay un reto matemático nuevo.</p><input class="w" id="nm" placeholder="Nombre y apellidos" autocomplete="off"><select class="w" id="cu"><option>1º ESO B</option><option>1º ESO C</option></select><div class="msg err" id="m">${m||""}</div><button class="w" id="go">Entrar al calendario 🎅</button><p style="text-align:right;margin:8px 0 0"><a href="#" id="pf" style="color:#165b3a">🔒 Acceso profesora</a></p></div>`;
+$("#go").onclick=()=>{const n=$("#nm").value.trim().replace(/\s+/g," ");if(n.split(" ").length<2)return $("#m").textContent="Escribe tu nombre y apellidos.";const c=$("#cu").value,id=n.toLowerCase()+"|"+c,d=ld();U=(d.users&&d.users[id])||{id,n,c,d:{}};U.k=U.k||{};save();sweep();cal()};
+$("#pf").onclick=e=>{e.preventDefault();A.querySelector(".card").innerHTML=`<p style="margin:0 0 10px"><b>Acceso profesora</b></p><input class="w" id="pw" type="password" placeholder="Contraseña"><div class="msg err" id="m"></div><div class="row"><button class="s" id="vb">Volver</button><button id="ok">Entrar</button></div>`;$("#vb").onclick=()=>login();const g=async()=>{const p=$("#pw").value;if(await H(SALT+"|pw|"+p)===PH){T=true;PW=p;pan()}else $("#m").textContent="Contraseña incorrecta."};$("#ok").onclick=g;$("#pw").onkeydown=e=>{if(e.key=="Enter")g()}}}
+function cal(){clearInterval(tm);const hh=hoy();let ok=0;for(const i in U.d)if(U.d[i].st=="ok")ok++;
+let h=`<div class="card"><div class="top"><b>🎅 ${esc(U.n)} · ${U.c}</b><span class="pill">${ok} de 24 resueltos</span><button class="s" id="ex">Salir</button></div><div class="grid">`;
+R.forEach((r,i)=>{const e=U.d[i],a=ab(i),c=!a?"lock":e?e.st:(i+1==hh?"hoy":""),ic=!a?(SOLO_CLASE.includes(i+1)?"🏫":"🔒"):e?{ok:"✅",fail:"❌",exp:"⏱",open:"⏳"}[e.st]:"";h+=`<div class="b ${c}" data-i="${i}"><em>${ic}</em>${i+1}<span>${SY[i]}</span></div>`});
+h+=`</div><div class="row" style="margin-top:12px"><input id="kc" placeholder="🔑 Código de clase" autocomplete="off"><button id="kb">Desbloquear</button></div><div class="msg err" id="km"></div><p class="msg">Dorado: reto de hoy. 🏫 se abre en clase con un código de la profesora. Puedes hacer un reto cuando quieras, pero una vez que lo abres empieza el cronómetro y solo podrás ver su solución (desde el día siguiente).</p><button class="s" id="mc">📋 Mi código para la profesora</button><div id="cd"></div></div>`;A.innerHTML=h;
+$("#ex").onclick=()=>login();A.querySelectorAll(".b").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(ab(i))op(i)});
+$("#kb").onclick=async()=>{const c=$("#kc").value.trim().toUpperCase().replace(/O/g,"0");for(let d=1;d<=24;d++)if(c&&await H(SALT+"|c|"+d+"|"+c)===CH[d-1]){U.k[d]=1;save();cal();$("#km").textContent="";$("#km").className="msg okc";$("#km").textContent="Reto "+d+" desbloqueado.";return}$("#km").textContent="Código no válido."};
+$("#mc").onclick=()=>{const rows=Object.keys(U.d).filter(k=>U.d[k].st!="open").map(k=>({nombre:U.n,curso:U.c,dia:+k+1,estado:U.d[k].st,intentos:U.d[k].a.length,segundos:U.d[k].t})),c=btoa(unescape(encodeURIComponent(JSON.stringify(rows))));$("#cd").innerHTML=`<p class="msg">Copia este código y envíaselo a tu profesora:</p><textarea id="ct" rows="4" readonly>${c}</textarea>`;$("#ct").onclick=e=>e.target.select()}}
+function op(i){if(T)return draw(i,true);if(U.d[i])return draw(i);ask(i)}
+function ask(i){A.innerHTML=`<div class="card"><h2 style="margin:0 0 8px;color:#b3202a">${SY[i]} Reto ${i+1}: ${R[i][0]}</h2><p class="pr">Tienes <b>${R[i][1]} minutos</b> y <b>3 intentos</b>. El cronómetro empieza al pulsar «Empezar». Una vez dentro, no podrás repetir el reto.</p><div class="row"><button class="s" id="bk">← Volver</button><button id="st">Empezar</button></div></div>`;$("#bk").onclick=cal;$("#st").onclick=()=>{U.d[i]={s:Date.now(),a:[],st:"open",t:0};save();draw(i)}}
+function draw(i,sol){clearInterval(tm);if(!T)chk(i);const r=R[i],e=T?null:U.d[i],canSol=T||(e&&e.st!="open"&&hoy()>i+1);
+let h=`<div class="card"><div class="top"><button class="s" id="bk">← ${T?"Panel":"Calendario"}</button><span class="pill">Reto ${i+1} · ${r[1]} min</span></div><h2 style="margin:0;color:#b3202a">${SY[i]} ${r[0]}</h2>`;
+if(e&&e.st=="open")h+=`<div class="tm" id="tt">⏱ --:--</div>`;
+h+=`<p class="pr">${r[2]}</p>`;
+if(T)h+=`<p class="msg"><i>Vista de profesora: sin cronómetro ni envío.</i></p>`;
+else if(e.st=="open")h+=`<div class="row"><input id="an" placeholder="Tu respuesta (número)" autocomplete="off"><button id="en">Enviar</button></div><div class="msg err" id="m"></div><div class="msg">Intentos restantes: <b>${3-e.a.length}</b>${e.a.length?" · Ya probaste: "+e.a.join(", "):""}</div>`;
+else{h+=`<div class="msg">${e.st=="ok"?`<span class="okc">🎉 ¡Correcto! Lo resolviste en ${f(e.t)} con ${e.a.length} intento(s).</span>`:e.st=="fail"?`<span class="err">Has usado los 3 intentos. Reto cerrado.</span>`:`<span class="err">⏱ Se acabó el tiempo. Reto cerrado.</span>`}</div>`;if(!canSol)h+=`<p class="msg">La solución aparecerá cuando empiece el día siguiente.</p>`}
+if(canSol)h+=`<button class="g" id="sb">${sol?"Ocultar solución":"Solución"}</button>`;
+if(sol&&canSol)h+=`<div class="sol">${r[4]}</div>`;
+A.innerHTML=h+`</div>`;
+$("#bk").onclick=()=>T?pr():cal();const sb=$("#sb");if(sb)sb.onclick=()=>draw(i,!sol);
+if(e&&e.st=="open"){const lim=r[1]*60,t=()=>{const rest=lim-Math.round((Date.now()-e.s)/1000);if(rest<=0){draw(i);return}const x=$("#tt");x.textContent="⏱ "+f(rest);x.className="tm"+(rest<60?" r":"")};t();tm=setInterval(t,1000);
+const go=async()=>{const v=parseFloat($("#an").value.replace(/\s/g,"").replace(",",".").replace("−","-"));if(isNaN(v)){$("#m").textContent="Escribe un número.";return}chk(i);if(e.st!="open")return draw(i);const hv=await H(SALT+"|"+(i+1)+"|"+v);chk(i);if(e.st!="open")return draw(i);e.a.push(v);const el=Math.round((Date.now()-e.s)/1000);if(hv===r[3])fin(i,"ok",el);else if(e.a.length>=3)fin(i,"fail",el);else save();draw(i)};
+$("#en").onclick=go;$("#an").onkeydown=k=>{if(k.key=="Enter")go()};$("#an").focus()}}
+async function pan(){clearInterval(tm);T=true;CODES=[];for(let d=1;d<=24;d++)CODES.push((await H(SALT+"|code|"+PW+"|"+d)).slice(0,6).toUpperCase());
+const d=ld(),m={};(d.imp||[]).forEach(r=>m[r.curso+"|"+r.nombre+"|"+r.dia]=r);
+for(const u of Object.values(d.users||{}))for(const k in u.d){const e=u.d[k];if(e.st!="open")m[u.c+"|"+u.n+"|"+(+k+1)]={nombre:u.n,curso:u.c,dia:+k+1,estado:e.st,intentos:e.a.length,segundos:e.t}}
+ROWS=Object.values(m);pr()}
+function pr(){const S={};ROWS.forEach(r=>{const k=r.curso+"|"+r.nombre;(S[k]=S[k]||{n:r.nombre,c:r.curso,d:{}}).d[r.dia]=r});
+const L=Object.values(S).filter(s=>F=="all"||s.c==F).sort((a,b)=>a.c.localeCompare(b.c)||a.n.localeCompare(b.n));
+const all=L.flatMap(s=>Object.values(s.d)),oks=all.filter(r=>r.estado=="ok"),avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):0;
+let h=`<div class="card"><div class="top"><b>👩‍🏫 Panel de profesora</b><button class="s" id="ex">Salir</button></div><div class="row" style="margin-bottom:8px"><select id="fl" style="flex:1"><option value="all">Todas las clases</option><option>1º ESO B</option><option>1º ESO C</option></select><button id="cs">Descargar Excel (CSV)</button></div>
+<div class="met"><div><b>${L.length}</b>alumnos</div><div><b>${oks.length}/${all.length}</b>retos acertados</div><div><b>${all.length?Math.round(100*oks.length/all.length):0}%</b>acierto</div><div><b>${f(avg(oks.map(r=>r.segundos)))}</b>tiempo medio (aciertos)</div></div>
+<p class="msg">✓ acertado · ✗ 3 fallos · ⏱ tiempo agotado. Pasa el ratón por una casilla para ver tiempo e intentos.</p><div class="sc"><table><tr><th>Alumno</th><th>Curso</th>${R.map((r,i)=>`<th>${i+1}</th>`).join("")}<th>✓</th><th>T. medio</th></tr>`;
+L.forEach(s=>{const o=Object.values(s.d).filter(r=>r.estado=="ok");h+=`<tr><td class="n">${esc(s.n)}</td><td>${esc(s.c).replace("1º ESO ","")}</td>`;R.forEach((r,i)=>{const x=s.d[i+1];h+=x?`<td class="c-${x.estado}" title="${f(x.segundos)} · ${x.intentos} intento(s)">${{ok:"✓",fail:"✗",exp:"⏱"}[x.estado]}</td>`:"<td></td>"});h+=`<td><b>${o.length}</b></td><td>${f(avg(o.map(r=>r.segundos)))}</td></tr>`});
+h+=`<tr><td class="n"><b>% acierto</b></td><td></td>${R.map((r,i)=>{const a=all.filter(x=>x.dia==i+1);return`<td>${a.length?Math.round(100*a.filter(x=>x.estado=="ok").length/a.length)+"%":""}</td>`}).join("")}<td></td><td></td></tr>`;
+h+=`<tr><td class="n"><b>Tiempo medio</b></td><td></td>${R.map((r,i)=>{const a=oks.filter(x=>x.dia==i+1);return`<td>${a.length?f(avg(a.map(x=>x.segundos))):""}</td>`}).join("")}<td></td><td></td></tr></table></div>${ROWS.length?"":`<p class="msg">Aún no hay resultados en este dispositivo. Importa los códigos de tus alumnos más abajo.</p>`}</div>`;
+const W=["dom","lun","mar","mié","jue","vie","sáb"];
+h+=`<div class="card"><b>🔑 Control de acceso a los retos</b><p class="msg">Para abrir un reto (por ejemplo uno de fin de semana que hacéis en clase), dile a tus alumnos su código. Lo escriben en «Código de clase» y se desbloquea en su dispositivo. 🏫 = reto solo con código.</p><div class="sc"><table><tr><th>Reto</th><th>Fecha</th><th>Se abre</th><th>Código</th></tr>${R.map((r,i)=>{const d=i+1;return`<tr><td>${d}</td><td>${W[new Date(2026,11,d).getDay()]} ${d} dic</td><td>${SOLO_CLASE.includes(d)?"🏫 solo con código":AUTO_FECHA?"Por fecha (o con código)":"Solo con código"}</td><td><b>${CODES[i]}</b></td></tr>`}).join("")}</table></div><div class="row" style="margin-top:8px"><select id="cb" style="flex:1">${R.map((r,i)=>`<option value="${i}">Reto ${i+1} · ${r[0]}</option>`).join("")}</select><button id="big">Código en grande</button></div><div id="bg"></div></div>
+<div class="card"><b>📥 Importar resultados de alumnos</b><p class="msg">Pega aquí los códigos que te envíen (uno por línea) desde «Mi código para la profesora».</p><textarea id="it" rows="4"></textarea><div class="row" style="margin-top:8px"><button id="im">Importar</button></div><div class="msg" id="im2"></div></div>
+<div class="card"><b>Retos (vista profesora, todos abiertos)</b><div class="grid" style="margin-top:10px">${R.map((r,i)=>`<div class="b" data-i="${i}">${i+1}<span>${SY[i]}</span></div>`).join("")}</div></div>`;
+A.innerHTML=h;$("#fl").value=F;$("#fl").onchange=e=>{F=e.target.value;pr()};$("#ex").onclick=()=>login();
+A.querySelectorAll(".b").forEach(b=>b.onclick=()=>draw(+b.dataset.i,true));
+$("#big").onclick=()=>{const i=+$("#cb").value;$("#bg").innerHTML=`<p class="msg" style="text-align:center">Reto ${i+1}</p><div style="font-size:52px;letter-spacing:8px;text-align:center;font-weight:bold;color:#b3202a">${CODES[i]}</div>`};
+$("#im").onclick=async()=>{const d=ld();d.imp=d.imp||[];let ok=0,bad=0;$("#it").value.split(/\s+/).filter(Boolean).forEach(c=>{try{JSON.parse(decodeURIComponent(escape(atob(c)))).forEach(r=>{if(!["ok","fail","exp"].includes(r.estado)||!(r.dia>=1&&r.dia<=24))throw 0;const x={nombre:String(r.nombre).slice(0,80),curso:r.curso=="1º ESO C"?"1º ESO C":"1º ESO B",dia:+r.dia,estado:r.estado,intentos:+r.intentos||0,segundos:+r.segundos||0},k=x.curso+"|"+x.nombre+"|"+x.dia;d.imp=d.imp.filter(y=>y.curso+"|"+y.nombre+"|"+y.dia!=k);d.imp.push(x)});ok++}catch(x){bad++}});sv(d);await pan();$("#im2").textContent=ok+" código(s) importado(s)"+(bad?", "+bad+" no válido(s)":"")+"."};
+$("#cs").onclick=()=>{const q=s=>{s=String(s);return'"'+(/^[=+\-@]/.test(s)?"'"+s:s).replace(/"/g,'""')+'"'},c="nombre;curso;dia;estado;intentos;segundos\n"+ROWS.map(r=>[q(r.nombre),q(r.curso),r.dia,r.estado,r.intentos,r.segundos].join(";")).join("\n"),a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\ufeff"+c],{type:"text/csv"}));a.download="resultados_adviento.csv";a.click()}}
+snow();login();
+</script></body></html>
